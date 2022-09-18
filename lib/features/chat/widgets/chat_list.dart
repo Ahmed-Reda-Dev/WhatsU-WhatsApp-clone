@@ -14,12 +14,16 @@ class ChatList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return StreamBuilder<List<Message>>(
-      stream: ref.watch(chatControllerProvider).chatStream(receiverUserId),
+      stream: ref.read(chatControllerProvider).chatStream(receiverUserId),
       builder: (context, AsyncSnapshot<List<Message>> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting)
           {
             return const Center(child: CircularProgressIndicator(color: Color(0xFF128C7E),));
-          } else {
+          } else if(snapshot.hasError){
+          print(snapshot.error);
+          print(snapshot.data);
+          return Text(snapshot.error.toString());
+        }else {
           return ListView.builder(
           itemCount: snapshot.data!.length,
           itemBuilder: (context, index) {

@@ -42,7 +42,7 @@ class SelectContactsRepository {
           {
             isFound = true;
             Navigator.pushNamed(context, MobileChatScreen.routeName,arguments: {
-              'name' : selectedContact.displayName,
+              'name' : userData.name,
               'uid' : userData.uid,
             });
           }

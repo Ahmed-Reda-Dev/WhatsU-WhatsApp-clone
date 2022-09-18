@@ -104,8 +104,9 @@ class ChatRepository {
         .snapshots()
         .map((event) {
       List<Message> messages = [];
-      print(receiverUserId);
-      for (var doc in event.docs) {
+      for (var doc in event.docs)
+      {
+        print(doc.data());
         var message = Message.fromMap(doc.data());
         messages.add(message);
       }

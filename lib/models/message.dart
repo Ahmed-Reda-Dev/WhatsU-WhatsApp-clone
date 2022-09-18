@@ -26,7 +26,7 @@ class Message {
       'messageId': messageId,
       'text': text,
       'type': type.type,
-      'timeSent': timeSent,
+      'timeSent': timeSent.millisecondsSinceEpoch,
       'isSeen': isSeen,
     };
   }

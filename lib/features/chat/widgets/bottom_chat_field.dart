@@ -34,6 +34,11 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
       });
     }
   }
+  @override
+  void dispose() {
+    super.dispose();
+    _messageController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
