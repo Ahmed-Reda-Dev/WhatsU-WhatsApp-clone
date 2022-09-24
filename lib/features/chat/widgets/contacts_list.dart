@@ -63,7 +63,7 @@ class ContactsList extends ConsumerWidget {
                           radius: 30,
                         ),
                         trailing: Text(
-                          DateFormat.Hm().format(chatContactsData.timeSent),
+                          DateFormat('h:mm a').format(chatContactsData.timeSent),
                           style: const TextStyle(
                             color: Colors.grey,
                             fontSize: 13,
