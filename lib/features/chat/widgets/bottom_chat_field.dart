@@ -8,8 +8,10 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:whatsapp_clone/common/enums/message_enum.dart';
+import 'package:whatsapp_clone/common/providers/message_reply_provider.dart';
 import 'package:whatsapp_clone/common/utils/utils.dart';
 import 'package:whatsapp_clone/features/chat/controller/chat_controller.dart';
+import 'package:whatsapp_clone/features/chat/widgets/message_reply_preview.dart';
 
 import '../../../colors.dart';
 
@@ -75,8 +77,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
             timeInSecForIosWeb: 1,
             backgroundColor: tabColor,
             textColor: Colors.white,
-            fontSize: 16.0
-        );
+            fontSize: 16.0);
       } else {
         await _soundRecorder!.startRecorder(
           toFile: path,
@@ -88,8 +89,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
             timeInSecForIosWeb: 1,
             backgroundColor: tabColor,
             textColor: Colors.white,
-            fontSize: 16.0
-        );
+            fontSize: 16.0);
       }
       setState(() {
         isRecoding = !isRecoding;
@@ -123,8 +123,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
           timeInSecForIosWeb: 1,
           backgroundColor: tabColor,
           textColor: Colors.white,
-          fontSize: 16.0
-      );
+          fontSize: 16.0);
     }
   }
 
@@ -142,8 +141,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
           timeInSecForIosWeb: 1,
           backgroundColor: tabColor,
           textColor: Colors.white,
-          fontSize: 16.0
-      );
+          fontSize: 16.0);
     }
   }
 
@@ -193,6 +191,8 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
 
   @override
   Widget build(BuildContext context) {
+    final messageReply = ref.watch(messageReplyProvider);
+    final isShowMessageReply = messageReply != null;
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 5,
@@ -201,129 +201,141 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
       child: Column(
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Expanded(
-                child: TextFormField(
-                  focusNode: focusNode,
-                  onTap: () {
-                    setState(() {
-                      isShowEmojiContainer = false;
-                    });
-                  },
-                  controller: _messageController,
-                  onChanged: (value) {
-                    if (value.isNotEmpty) {
-                      setState(() {
-                        isShowSendButton = true;
-                        isTyping = true;
-                      });
-                    } else if (value.isEmpty || value == '') {
-                      setState(() {
-                        isShowSendButton = false;
-                        isTyping = false;
-                      });
-                    }
-                  },
-                  decoration: InputDecoration(
-                    filled: true,
-                    fillColor: mobileChatBoxColor,
-                    prefixIcon: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child: IconButton(
-                        onPressed: toggleEmojiKeyboardContainer,
-                        icon: const Icon(
-                          Icons.emoji_emotions_outlined,
-                          color: Colors.grey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    isShowMessageReply
+                        ? const MessageReplyPreview()
+                        : const SizedBox(
+                            height: 0,
+                            width: 0,
+                          ),
+                    TextFormField(
+                      focusNode: focusNode,
+                      onTap: () {
+                        setState(() {
+                          isShowEmojiContainer = false;
+                        });
+                      },
+                      controller: _messageController,
+                      onChanged: (value) {
+                        if (value.isNotEmpty) {
+                          setState(() {
+                            isShowSendButton = true;
+                            isTyping = true;
+                          });
+                        } else if (value.isEmpty || value == '') {
+                          setState(() {
+                            isShowSendButton = false;
+                            isTyping = false;
+                          });
+                        }
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: mobileChatBoxColor,
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                          child: IconButton(
+                            onPressed: toggleEmojiKeyboardContainer,
+                            icon: const Icon(
+                              Icons.emoji_emotions_outlined,
+                              color: Colors.grey,
+                            ),
+                            splashRadius: 23,
+                          ),
+                          // isShowSendButton
+                          //     ? IconButton(
+                          //         onPressed: toggleEmojiKeyboardContainer,
+                          //         icon: const Icon(
+                          //           Icons.emoji_emotions_outlined,
+                          //           color: Colors.grey,
+                          //         ),
+                          //         splashRadius: 23,
+                          //       )
+                          //     : Row(
+                          //         children: [
+                          //           IconButton(
+                          //             onPressed: toggleEmojiKeyboardContainer,
+                          //             icon: const Icon(
+                          //               Icons.emoji_emotions_outlined,
+                          //               color: Colors.grey,
+                          //             ),
+                          //             splashRadius: 23,
+                          //           ),
+                          //           IconButton(
+                          //             onPressed: (){},
+                          //             icon: const Icon(
+                          //               Icons.gif_box_outlined,
+                          //               color: Colors.grey,
+                          //             ),
+                          //             splashRadius: 23,
+                          //           ),
+                          //         ],
+                          //       ),
                         ),
-                        splashRadius: 23,
-                      ),
-                      // isShowSendButton
-                      //     ? IconButton(
-                      //         onPressed: toggleEmojiKeyboardContainer,
-                      //         icon: const Icon(
-                      //           Icons.emoji_emotions_outlined,
-                      //           color: Colors.grey,
-                      //         ),
-                      //         splashRadius: 23,
-                      //       )
-                      //     : Row(
-                      //         children: [
-                      //           IconButton(
-                      //             onPressed: toggleEmojiKeyboardContainer,
-                      //             icon: const Icon(
-                      //               Icons.emoji_emotions_outlined,
-                      //               color: Colors.grey,
-                      //             ),
-                      //             splashRadius: 23,
-                      //           ),
-                      //           IconButton(
-                      //             onPressed: (){},
-                      //             icon: const Icon(
-                      //               Icons.gif_box_outlined,
-                      //               color: Colors.grey,
-                      //             ),
-                      //             splashRadius: 23,
-                      //           ),
-                      //         ],
-                      //       ),
-                    ),
-                    suffixIcon: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                      child: SizedBox(
-                        width: !isShowSendButton ? 100 : 0,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            !isShowSendButton
-                                ? IconButton(
-                                    onPressed: selectVideo,
-                                    icon: const Icon(
-                                      Icons.attach_file,
-                                      color: Colors.grey,
-                                    ),
-                                    splashRadius: 20,
-                                  )
-                                : InkWell(
-                                    onTap: selectVideo,
-                                    child: const Icon(
-                                      Icons.attach_file,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                            !isShowSendButton
-                                ? IconButton(
-                                    onPressed: selectImage,
-                                    icon: const Icon(
-                                      Icons.camera_alt_outlined,
-                                      color: Colors.grey,
-                                    ),
-                                    splashRadius: 20,
-                                  )
-                                : Container(
-                                    width: 1,
-                                  ),
-                          ],
+                        suffixIcon: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                          child: SizedBox(
+                            width: !isShowSendButton ? 100 : 0,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                !isShowSendButton
+                                    ? IconButton(
+                                        onPressed: selectVideo,
+                                        icon: const Icon(
+                                          Icons.attach_file,
+                                          color: Colors.grey,
+                                        ),
+                                        splashRadius: 20,
+                                      )
+                                    : InkWell(
+                                        onTap: selectVideo,
+                                        child: const Icon(
+                                          Icons.attach_file,
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                !isShowSendButton
+                                    ? IconButton(
+                                        onPressed: selectImage,
+                                        icon: const Icon(
+                                          Icons.camera_alt_outlined,
+                                          color: Colors.grey,
+                                        ),
+                                        splashRadius: 20,
+                                      )
+                                    : Container(
+                                        width: 1,
+                                      ),
+                              ],
+                            ),
+                          ),
                         ),
+                        hintText: 'Message',
+                        hintStyle: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 20,
+                          color: Colors.grey[600],
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0),
+                          borderSide: const BorderSide(
+                            width: 0,
+                            style: BorderStyle.none,
+                          ),
+                        ),
+                        contentPadding: const EdgeInsets.all(10),
                       ),
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      cursorColor: tabColor,
                     ),
-                    hintText: 'Message',
-                    hintStyle: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 20,
-                      color: Colors.grey[600],
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(25.0),
-                      borderSide: const BorderSide(
-                        width: 0,
-                        style: BorderStyle.none,
-                      ),
-                    ),
-                    contentPadding: const EdgeInsets.all(10),
-                  ),
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  cursorColor: tabColor,
+                  ],
                 ),
               ),
               const SizedBox(
