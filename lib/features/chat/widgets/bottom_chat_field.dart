@@ -227,7 +227,7 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                             isShowSendButton = true;
                             isTyping = true;
                           });
-                        } else if (value.isEmpty || value == '') {
+                        } else if (_messageController.text.isEmpty) {
                           setState(() {
                             isShowSendButton = false;
                             isTyping = false;
@@ -342,7 +342,12 @@ class _BottomChatFieldState extends ConsumerState<BottomChatField> {
                 width: 5,
               ),
               GestureDetector(
-                onTap: sendTextMessage,
+                onTap: () {
+                  sendTextMessage();
+                  setState(() {
+                    isShowSendButton = false;
+                  });
+                },
                 child: CircleAvatar(
                   backgroundColor: const Color(0xFF128C7E),
                   radius: 24,
